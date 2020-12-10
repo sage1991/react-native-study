@@ -1,22 +1,26 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { ColorControl } from "../components/ColorControl";
 
 const INCREMENT = 5;
 
 const reducer = (state, action) => {
+  // state === { red: number, green: number, blue number }
+  // action === { type: "increase" | "decrease", color: "red" | "green" | "blue" }
   let value;
   switch (action.type) {
     case "increase":
-      value = state[action.color] + INCREMENT <= 255
-              ? state[action.color] + INCREMENT
-              : 255;
-      return { ...state, [action.color]: value  };
+      return (
+        state[action.color] + INCREMENT <= 255
+          ? { ...state, [action.color]: state[action.color] + INCREMENT }
+          : state
+      );
     case "decrease":
-      value = state[action.color] - INCREMENT >= 0
-              ? state[action.color] - INCREMENT
-              : 0;
-      return { ...state, [action.color]: value  };
+      return (
+        state[action.color] - INCREMENT >= 0
+          ? { ...state, [action.color]: state[action.color] - INCREMENT }
+          : state
+      );
     default:
       return state;
   }
