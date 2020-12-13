@@ -17,3 +17,7 @@ export const search = (query: string): Promise<AxiosResponse> => {
     }
   });
 }
+
+export const fetchBusiness = (id: string) => {
+  return yelp.get(`/${id}`);
+}

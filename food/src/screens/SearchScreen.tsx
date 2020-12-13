@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { StackNavigationProp } from "react-navigation-stack/lib/typescript/src/vendor/types";
 import { SearchBar } from "../components/SearchBar";
@@ -28,9 +28,15 @@ export const SearchScreen: FC<SearchScreenProps> = (props) => {
           networkState?.error &&
           <Text style={styles.error}>{ `Oops, Something went wrong... ${networkState.message}` }</Text>
         }
-        <BusinessList businesses={filterByPrice(businesses, "$")} title="Cost Effective" />
-        <BusinessList businesses={filterByPrice(businesses, "$$")} title="Bit Pricier" />
-        <BusinessList businesses={filterByPrice(businesses, "$$$$")} title="Big Spender" />
+        <BusinessList
+          title="Cost Effective"
+          businesses={filterByPrice(businesses, "$")} />
+        <BusinessList
+          title="Bit Pricier"
+          businesses={filterByPrice(businesses, "$$")} />
+        <BusinessList
+          title="Big Spender"
+          businesses={filterByPrice(businesses, "$$$$")} />
       </ScrollView>
     </>
   )
