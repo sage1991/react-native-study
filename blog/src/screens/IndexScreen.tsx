@@ -1,35 +1,45 @@
-import React, { FC, useContext } from "react";
-import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useContext } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BlogContext } from "../context/BlogContext";
 import { Feather } from "@expo/vector-icons";
+import { NavigationStackScreenComponent } from "react-navigation-stack";
 
-export const IndexScreen: FC = () => {
+
+export const IndexScreen: NavigationStackScreenComponent = (props) => {
   const { state, actions } = useContext(BlogContext);
   const { addPost, deletePost } = actions;
 
-  const _addPost = () => {
-    const post = { title: `Post #${state.length + 1}`, id: Date.now() };
-    addPost(post);
-  }
+  const navigate = (id: number) => props.navigation.navigate("Show", { id });
 
   return (
     <>
       <Text>Index Screen</Text>
-      <Button title="add post" onPress={_addPost} />
       <FlatList
         data={state}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.listItem}>
-            <Text style={styles.postTitle}>{ item.title } - { item.id }</Text>
-            <TouchableOpacity onPress={deletePost.bind(actions, item.id)}>
-              <Feather name="trash" style={styles.trashIcon} />
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity onPress={navigate.bind(null, item.id)}>
+            <View style={styles.listItem}>
+              <Text style={styles.postTitle}>{ item.title } - { item.id }</Text>
+              <TouchableOpacity onPress={deletePost.bind(actions, item.id)}>
+                <Feather name="trash" style={styles.trashIcon} />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         )} />
     </>
   )
 }
+
+IndexScreen.navigationOptions = ({ navigation }) => ({
+  headerRight: () => {
+    return (
+      <TouchableOpacity onPress={() => navigation.navigate("Create")}>
+        <Feather style={styles.headerRight} name="plus" />
+      </TouchableOpacity>
+    );
+  }
+});
 
 const styles = StyleSheet.create({
   listItem: {
@@ -45,5 +55,9 @@ const styles = StyleSheet.create({
   },
   trashIcon: {
     fontSize: 18
+  },
+  headerRight: {
+    marginRight: 10,
+    fontSize: 30
   }
 });
