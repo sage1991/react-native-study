@@ -1,4 +1,4 @@
-import React, { FC, useReducer } from "react";
+import React, { FC, useMemo, useReducer } from "react";
 
 
 type Reducer<S, A> = (state: S, action: A) => S;
@@ -14,23 +14,21 @@ interface Constructable<T, A> {
 
 interface DataContext<S, A, T> {
   state: S;
-  dispatch: Dispatch<A>;
   actions: T;
 }
 
-export const createDataContext = <S, A, T extends ActionBuilder<A>> (reducer: Reducer<S, A>, initState: S, ActionBuilder: Constructable<T, A>): [ React.Context<DataContext<S, A, T>>, FC ] => {
+export const createDataContext = <S, A, T extends ActionBuilder<A>> (reducer: Reducer<S, A>, ActionBuilder: Constructable<T, A>, initState?: S): [ React.Context<DataContext<S, A, T>>, FC ] => {
   const Context = React.createContext<DataContext<S, A, T>>({
-    state: initState,
-    dispatch: (action: A) => {},
+    state: initState!,
     actions: {} as T
   });
 
   const Provider: FC = ({ children }) => {
-    const [ state, dispatch ] = useReducer(reducer, initState);
-    const actions = new ActionBuilder(dispatch);
+    const [ state, dispatch ] = useReducer(reducer, initState!);
+    const actions = useMemo(() => new ActionBuilder(dispatch), [ dispatch ]);
 
     return (
-      <Context.Provider value={{ state, dispatch, actions }}>
+      <Context.Provider value={{ state, actions }}>
         { children }
       </Context.Provider>
     );

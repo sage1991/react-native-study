@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { BlogContext } from "../context/BlogContext";
 import { Feather } from "@expo/vector-icons";
@@ -7,7 +7,11 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 export const IndexScreen: NavigationStackScreenComponent = (props) => {
   const { state, actions } = useContext(BlogContext);
-  const { addPost, deletePost } = actions;
+  const { deletePost, fetchPost } = actions;
+
+  useEffect(() => {
+    fetchPost();
+  }, [ fetchPost ]);
 
   const navigate = (id: number) => props.navigation.navigate("Show", { id });
 

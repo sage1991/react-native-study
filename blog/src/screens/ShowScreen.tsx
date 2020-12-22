@@ -7,9 +7,8 @@ import { EvilIcons } from "@expo/vector-icons";
 
 export const ShowScreen: NavigationStackScreenComponent = (props) => {
   const { navigation } = props;
-  const id = navigation.getParam("id");
   const { state } = useContext(BlogContext);
-  const post = state.find((_post) => _post.id === id);
+  const post = state.find((_post) => _post.id === navigation.getParam("id"));
 
   return (
     <View>
