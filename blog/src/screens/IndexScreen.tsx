@@ -6,11 +6,17 @@ import { NavigationStackScreenComponent } from "react-navigation-stack";
 
 
 export const IndexScreen: NavigationStackScreenComponent = (props) => {
+  const { navigation } = props;
   const { state, actions } = useContext(BlogContext);
   const { deletePost, fetchPost } = actions;
 
   useEffect(() => {
     fetchPost();
+    const listener = navigation.addListener("didFocus", () => {
+      fetchPost();
+    });
+
+    return () => listener.remove()
   }, [ fetchPost ]);
 
   const navigate = (id: number) => props.navigation.navigate("Show", { id });

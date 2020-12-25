@@ -63,14 +63,19 @@ class BlogPostActionBuilder implements ActionBuilder<Action> {
   }
 
   addPost = async (title: string, content: string, callback?: () => void) => {
-    const post: Post = { id: Date.now(), title: title, content: content };
-    this.dispatch({ type: BlogContextAction.ADD_POST, payload: post });
+    const response = await jsonServer.post<Post>("/post", { title: title, content: content });
+    // this.dispatch({ type: BlogContextAction.ADD_POST, payload: response.data });
     callback && callback();
   }
 
-  deletePost = (id: number) => this.dispatch({ type: BlogContextAction.DELETE_POST, payload: id });
+  deletePost = async (id: number) => {
+    await jsonServer.delete<Post>(`/post/${id}`);
+    this.dispatch({ type: BlogContextAction.DELETE_POST, payload: id });
+  }
 
-  updatePost = (post: Post, callback?: () => void) => {
+  updatePost = async (post: Post, callback?: () => void) => {
+    const { id, ...rest } = post;
+    await jsonServer.put<Post>(`/post/${id}`, { ...rest });
     this.dispatch({ type: BlogContextAction.UPDATE_POST, payload: post });
     callback && callback();
   }
